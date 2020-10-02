@@ -1,6 +1,7 @@
 require('./config/config');
 const express = require('express')
 const app = express()
+const mongoose = require('mongoose');
 
 const bodyParser = require('body-parser')
 
@@ -10,42 +11,16 @@ app.use(bodyParser.urlencoded({ extended: false }))
 // parse application/json
 app.use(bodyParser.json())
 
+app.use(require('./controller/usuario'));
 
 
-app.get('/usuario', function(req, res) {
-    res.json('get usuario')
-});
+mongoose.connect(process.env.URLDB, { useNewUrlParser: true, useCreateIndex: true },
+    (err, res) => {
 
-app.post('/usuario', function(req, res) {
+        if (err) throw err;
 
-    let body = req.body;
-
-    if (body.nombre === undefined) {
-
-        res.status(400).json({
-            ok: false,
-            mensaje: 'él nombre es requerido'
-        });
-    } else {
-        res.json({
-            usuario: body
-        });
-    }
-
-});
-
-app.put('/usuario/:id', function(req, res) {
-
-    let id = req.params.id;
-    res.json({
-        id
-    })
-});
-
-app.delete('/usuario', function(req, res) {
-    res.json('delete usuario')
-});
-
+        console.log('base de datos en linea');
+    });
 app.listen(process.env.PORT, () => {
     console.log('Escuchando puerto', process.env.PORT);
 });
