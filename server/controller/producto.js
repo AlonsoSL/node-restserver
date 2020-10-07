@@ -1,6 +1,6 @@
 const express = require('express');
 
-let { verificaToken, verificaRol_Admin } = require('../middlewares/autenticacion');
+const { verificaToken } = require('../middlewares/autenticacion');
 
 let app = express();
 
@@ -87,19 +87,19 @@ app.get('/productos/:id', verificaToken, (res, req) => {
 //==================
 //crear nuevo productos
 //===================
-app.post('/productos', verificaToken, (res, req) => {
+app.post('/productos', verificaToken, (req, res) => {
     //grabar usuario
     //grabar categoria del listado
 
     let body = req.body;
     //creo una instancia de mi modelo 
     let producto = new Producto({
-        usuario: req.usuario_id,
+        usuario: req.usuario._id,
         nombre: body.nombre,
         precioUni: body.precioUni,
         descripcion: body.descripcion,
-        categoria: body.categoria,
-
+        disponible: body.disponible,
+        categoria: body.categoria
     });
 
     //grabamos el producto en la base de datos
